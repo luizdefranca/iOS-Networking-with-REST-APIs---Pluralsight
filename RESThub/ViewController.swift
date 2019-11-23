@@ -19,7 +19,15 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // TODO: GET a list of gists
 
-        DataService.shared.fetchGists()
+        DataService.shared.fetchGists { (result) in
+
+            switch result {
+                case .success(let json):
+                    print(dump(json))
+                case .failure(let error):
+                    print(error.localizedDescription)
+            }
+        }
     }
 
     @IBAction func createNewGist(_ sender: UIButton) {

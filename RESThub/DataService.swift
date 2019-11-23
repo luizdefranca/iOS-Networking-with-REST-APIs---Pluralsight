@@ -14,7 +14,7 @@ class DataService {
     fileprivate let baseURLString = "https://api.github.com"
 
 
-    func fetchGists(){
+    func fetchGists(completion: @escaping(Result<Any, Error>) -> Void){
         //Differents ways to create a url path
 
         //1 - Using URL for the baseURL and appendPathComponent to add a new path
@@ -42,14 +42,28 @@ class DataService {
 
 
             if let httpResponse = response as? HTTPURLResponse {
-                print("API status: \(httpResponse.statusCode) - \(#file) - \(#function) - \(#line)")
+                print("API status: \(httpResponse.statusCode)")
             }
             guard let validData = data, error == nil else {
-                print("API error: \(error?.localizedDescription) - \(#file) - \(#function) - \(#line)")
+                completion(.failure(error!))
                 return
             }
 
-            
+//            print(String(data: validData, encoding: .utf8))
+
+            do {
+
+                let json = try JSONSerialization.jsonObject(with: validData, options: [])
+                print(json)
+                completion(.success(json))
+
+            } catch  let serializationError {
+                print("\(serializationError.localizedDescription) - \(#file) - \(#function) - \(#line)")
+                completion(.failure(error!))
+            }
+
+
         }.resume()
+
     }
 }
