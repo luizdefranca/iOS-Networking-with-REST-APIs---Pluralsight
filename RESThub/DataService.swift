@@ -85,13 +85,31 @@ class DataService {
             return
         }
 
+
+
         var postRequest = URLRequest(url: composedURL)
         postRequest.httpMethod = "POST"
+
+        let authString =
+//        "luizramospe@hotmail.com:.Lucas2014"
+        "de0f1f28817a1b69589bf184b5ee3305fb662fb7"
+        var authStringBase64 = ""
+
+        if let authData = authString.data(using: .utf8) {
+            authStringBase64 = authData.base64EncodedString()
+        }
+
+        postRequest.setValue("token \(authString)", forHTTPHeaderField: "Authorization")
+        postRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        postRequest.setValue("application/json", forHTTPHeaderField: "Accept")
+
+
+
         let newGist = Gist(id: nil, isPublic: true, description: "A brand new gist", files: ["test_file.txt": File(content: "hello")])
 
         do {
             let gistData = try JSONEncoder().encode(newGist)
-
+            postRequest.httpBody = gistData
         } catch  {
             print("Gist encoding failed")
             completion(.failure(error))
@@ -99,6 +117,8 @@ class DataService {
         URLSession.shared.dataTask(with: postRequest) { (data, response, error) in
             if let httpResponse = response as? HTTPURLResponse {
                 print(httpResponse.statusCode)
+                print(httpResponse.debugDescription)
+                print(httpResponse.description)
             }
 
             guard let validData = data, error == nil else {
