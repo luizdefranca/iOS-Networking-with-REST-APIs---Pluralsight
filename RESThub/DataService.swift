@@ -31,11 +31,25 @@ class DataService {
         var componentURL = URLComponents()
         componentURL.scheme = "https"
         componentURL.host = "api.github.com"
-        componentURL.path = "/somePath"
+        componentURL.path = "/gists/public"
+
+        guard let validURL = componentURL.url else {
+            print("URL creation failed... - \(#file) - \(#function) - \(#line)")
+            return
+        }
+
+        URLSession.shared.dataTask(with: validURL) { (data, response, error) in
 
 
-//        print(baseURL!)
-//        print(compusedURL?.absoluteString ?? "Relative URL failed")
-        print(componentURL.url!)
+            if let httpResponse = response as? HTTPURLResponse {
+                print("API status: \(httpResponse.statusCode) - \(#file) - \(#function) - \(#line)")
+            }
+            guard let validData = data, error == nil else {
+                print("API error: \(error?.localizedDescription) - \(#file) - \(#function) - \(#line)")
+                return
+            }
+
+            
+        }.resume()
     }
 }
