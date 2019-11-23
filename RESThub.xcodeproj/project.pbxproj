@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		25F950E52388F14500F14A4F /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F950E42388F14500F14A4F /* DataService.swift */; };
 		841CBDA922EAC9ED00CB5A46 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841CBDA822EAC9ED00CB5A46 /* AppDelegate.swift */; };
 		841CBDAB22EAC9ED00CB5A46 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841CBDAA22EAC9ED00CB5A46 /* ViewController.swift */; };
 		841CBDAE22EAC9ED00CB5A46 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 841CBDAC22EAC9ED00CB5A46 /* Main.storyboard */; };
@@ -15,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		25F950E42388F14500F14A4F /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		841CBDA522EAC9ED00CB5A46 /* RESThub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RESThub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		841CBDA822EAC9ED00CB5A46 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		841CBDAA22EAC9ED00CB5A46 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -56,6 +58,7 @@
 			children = (
 				841CBDA822EAC9ED00CB5A46 /* AppDelegate.swift */,
 				841CBDAA22EAC9ED00CB5A46 /* ViewController.swift */,
+				25F950E42388F14500F14A4F /* DataService.swift */,
 				841CBDAC22EAC9ED00CB5A46 /* Main.storyboard */,
 				841CBDAF22EAC9EE00CB5A46 /* Assets.xcassets */,
 				841CBDB122EAC9EE00CB5A46 /* LaunchScreen.storyboard */,
@@ -135,6 +138,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				25F950E52388F14500F14A4F /* DataService.swift in Sources */,
 				841CBDAB22EAC9ED00CB5A46 /* ViewController.swift in Sources */,
 				841CBDA922EAC9ED00CB5A46 /* AppDelegate.swift in Sources */,
 			);
