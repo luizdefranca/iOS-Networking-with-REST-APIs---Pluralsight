@@ -14,7 +14,10 @@ class DataService {
     fileprivate let baseURLString = "https://api.github.com"
 
 
-    func fetchGists(completion: @escaping(Result<Any, Error>) -> Void){
+    func fetchGists(completion:
+        //@escaping(Result<Any, Error>) // way 1 - using JSONSerialization.jsonObject
+        @escaping(Result<[Gist], Error>) //way 2 - using JSONDecoder().decode and codable
+        -> Void){
         //Differents ways to create a url path
 
         //1 - Using URL for the baseURL and appendPathComponent to add a new path
@@ -53,9 +56,15 @@ class DataService {
 
             do {
 
-                let json = try JSONSerialization.jsonObject(with: validData, options: [])
-                print(json)
-                completion(.success(json))
+                //There are two ways to deserializate um data object
+
+                //way 1 - Deserialization using JSONSerialization.jsonObject
+               // let json = try JSONSerialization.jsonObject(with: validData, options: [])
+
+                //way 2 - Using JSONDecoder and a codable struct or class
+
+                let gists = try JSONDecoder().decode( [Gist].self, from: validData)
+                completion(.success(gists))
 
             } catch  let serializationError {
                 print("\(serializationError.localizedDescription) - \(#file) - \(#function) - \(#line)")

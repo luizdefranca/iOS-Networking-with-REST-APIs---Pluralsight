@@ -22,8 +22,8 @@ class ViewController: UIViewController {
         DataService.shared.fetchGists { (result) in
 
             switch result {
-                case .success(let json):
-                    print(dump(json))
+                case .success(let gists):
+                    print(dump(gists))
                 case .failure(let error):
                     print(error.localizedDescription)
             }
