@@ -87,7 +87,35 @@ class DataService {
 
         var postRequest = URLRequest(url: composedURL)
         postRequest.httpMethod = "POST"
-        
+        let newGist = Gist(id: nil, isPublic: true, description: "A brand new gist", files: ["test_file.txt": File(content: "hello")])
+
+        do {
+            let gistData = try JSONEncoder().encode(newGist)
+
+        } catch  {
+            print("Gist encoding failed")
+            completion(.failure(error))
+        }
+        URLSession.shared.dataTask(with: postRequest) { (data, response, error) in
+            if let httpResponse = response as? HTTPURLResponse {
+                print(httpResponse.statusCode)
+            }
+
+            guard let validData = data, error == nil else {
+                completion(.failure(error!))
+                print("\(error!.localizedDescription) - \(#file) - \(#function) - \(#line)")
+                return
+            }
+
+            do {
+                let json = try JSONSerialization.jsonObject(with: validData, options: [])
+                completion(.success(json))
+            } catch let serializationError{
+                print("\(serializationError.localizedDescription) - \(#file) - \(#function) - \(#line)")
+                completion(.failure(serializationError))
+            }
+
+        }.resume()
     }
 
     func createURLComponents(path: String) -> URLComponents{
@@ -101,4 +129,5 @@ class DataService {
 
 enum CustomError : Error {
     case urlFailed
+
 }

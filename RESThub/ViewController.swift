@@ -20,7 +20,7 @@ class ViewController: UIViewController {
         // TODO: GET a list of gists
 
 
-
+/*
         DataService.shared.fetchGists { (result) in
 
             switch result {
@@ -31,7 +31,7 @@ class ViewController: UIViewController {
             }
         }
 
-        let testGist = Gist(id: "", isPublic: true, description: "hello")
+        let testGist = Gist(id: nil, isPublic: true, description: "Hello test", files: ["test.txt": File(content: "testing")])
 
         print("*******************************")
         do {
@@ -41,10 +41,19 @@ class ViewController: UIViewController {
         } catch  {
             print(error.localizedDescription)
         }
+ */
     }
 
     @IBAction func createNewGist(_ sender: UIButton) {
-        // TODO: POST a new gist
+
+        DataService.shared.createNewGist { (result) in
+            switch result {
+                case .success(let json):
+                    print(json)
+                case .failure(let error):
+                    print(error.localizedDescription)
+            }
+        }
     }
     
     // MARK: Utilities
