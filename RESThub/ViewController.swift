@@ -19,6 +19,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // TODO: GET a list of gists
 
+
+
         DataService.shared.fetchGists { (result) in
 
             switch result {
@@ -27,6 +29,17 @@ class ViewController: UIViewController {
                 case .failure(let error):
                     print(error.localizedDescription)
             }
+        }
+
+        let testGist = Gist(id: "", isPublic: true, description: "hello")
+
+        print("*******************************")
+        do {
+            let gistData = try JSONEncoder().encode(testGist)
+            let stringData = String(data: gistData, encoding: .utf8)
+            print(stringData)
+        } catch  {
+            print(error.localizedDescription)
         }
     }
 
