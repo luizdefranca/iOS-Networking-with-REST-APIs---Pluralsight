@@ -168,7 +168,7 @@ class DataService {
     }
 
     func createAuthCredential() -> String {
-        let authString = "65f1330f0ad79f4c87e592f84bb0f091bd7db730"
+        let authString = "0c110309fc9a6b44741a6078482a7b5b4b12ed92"
         //In this case we are using the token, so the next lines are commented
 //        var authStringBase64 = ""
 //

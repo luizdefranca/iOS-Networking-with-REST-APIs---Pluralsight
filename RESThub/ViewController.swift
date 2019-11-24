@@ -14,23 +14,31 @@ class ViewController: UIViewController {
     @IBOutlet weak var feedTableView: UITableView!
     
     // MARK: Variables
+
+    var feedGists: [Gist] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.feedTableView.delegate = self
+        self.feedTableView.dataSource = self
         // TODO: GET a list of gists
+        fetchGist()
 
-        testStarUnstarGist()
 
     }
 
     @IBAction func createNewGist(_ sender: UIButton) {
 
         DataService.shared.createNewGist { (result) in
-            switch result {
-                case .success(let json):
-                    print(json)
-                case .failure(let error):
-                    print(error.localizedDescription)
+            DispatchQueue.main.async {
+                switch result {
+                    case .success(let json):
+                        self.showResultAlert(title: "Great !!", message: "New post successfully created")
+                        print(json)
+                    case .failure(let error):
+                        self.showResultAlert(title: "Oops !!", message: "Somenthing get wrong")
+                        print(error.localizedDescription)
+                }
             }
         }
     }
@@ -49,12 +57,15 @@ class ViewController: UIViewController {
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1;
+        return self.feedGists.count;
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "feedCellID", for: indexPath)
-        
+        let gist = self.feedGists[indexPath.row]
+        cell.textLabel?.text = gist.description == "" ? "Empty description" : gist.description
+        cell.detailTextLabel?.text = gist.id
+//        cell.imageView?.image = gist
         return cell;
     }
     
@@ -63,12 +74,18 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         let starAction = UIContextualAction(style: .normal, title: "Star") { (action, view, completion) in
             
             // TODO: PUT a gist star
+            if let id = self.feedGists[indexPath.row].id {
+                self.starUnstarGist(turnOn: true, id: id )
+            }
             completion(true)
         }
         
         let unstarAction = UIContextualAction(style: .normal, title: "Unstar") { (action, view, completion) in
             
             // TODO: DELETE a gist star
+             if let id = self.feedGists[indexPath.row].id {
+                           self.starUnstarGist(turnOn: false, id: id )
+            }
             completion(true)
         }
         
@@ -82,39 +99,47 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension ViewController {
-    func testStarUnstarGist() {
-        DataService.shared.starnUnstarGist(id: "0e7d00739310fab60cf7ed374da5056f", star: true) { (success) in
+    func starUnstarGist(turnOn: Bool, id: String) {
+        DataService.shared.starnUnstarGist(id: id, star: turnOn) { (success) in
+            DispatchQueue.main.async {
 
-            if success {
-                print("Gist successfully changed")
-            } else {
-                print("Fail changing Gist")
+                if success {
+                    self.showResultAlert(title: "Great", message: turnOn ? "Gist successfully starred!" : "Gist successfully unstarred!")
+                    print("Gist successfully changed")
+                } else {
+                    self.showResultAlert(title: "Ooops!", message: "Something get wrong!! :(")
+                    print("Fail changing Gist")
+                }
             }
         }
     }
 
-    func testFetchGist(){
+    func fetchGist(){
 
-               DataService.shared.fetchGists { (result) in
+        DataService.shared.fetchGists { (result) in
 
-                   switch result {
-                       case .success(let gists):
-                           print(dump(gists))
-                       case .failure(let error):
-                           print(error.localizedDescription)
-                   }
-               }
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let gists):
+                    print(dump(gists))
+                    self.feedGists = gists
+                    self.feedTableView.reloadData()
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+        }
 
-               let testGist = Gist(id: nil, isPublic: true, description: "Hello test", files: ["test.txt": File(content: "testing")])
+//               let testGist = Gist(id: nil, isPublic: true, description: "Hello test", files: ["test.txt": File(content: "testing")])
 
-               print("*******************************")
-               do {
-                   let gistData = try JSONEncoder().encode(testGist)
-                   let stringData = String(data: gistData, encoding: .utf8)
-                   print(stringData as Any)
-               } catch  {
-                   print(error.localizedDescription)
-               }
+//               print("*******************************")
+//               do {
+//                   let gistData = try JSONEncoder().encode(testGist)
+//                   let stringData = String(data: gistData, encoding: .utf8)
+//                   print(stringData as Any)
+//               } catch  {
+//                   print(error.localizedDescription)
+//               }
 
     }
 }
