@@ -19,29 +19,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // TODO: GET a list of gists
 
+        testStarUnstarGist()
 
-/*
-        DataService.shared.fetchGists { (result) in
-
-            switch result {
-                case .success(let gists):
-                    print(dump(gists))
-                case .failure(let error):
-                    print(error.localizedDescription)
-            }
-        }
-
-        let testGist = Gist(id: nil, isPublic: true, description: "Hello test", files: ["test.txt": File(content: "testing")])
-
-        print("*******************************")
-        do {
-            let gistData = try JSONEncoder().encode(testGist)
-            let stringData = String(data: gistData, encoding: .utf8)
-            print(stringData)
-        } catch  {
-            print(error.localizedDescription)
-        }
- */
     }
 
     @IBAction func createNewGist(_ sender: UIButton) {
@@ -102,3 +81,40 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
 }
 
+extension ViewController {
+    func testStarUnstarGist() {
+        DataService.shared.starnUnstarGist(id: "0e7d00739310fab60cf7ed374da5056f", star: true) { (success) in
+
+            if success {
+                print("Gist successfully changed")
+            } else {
+                print("Fail changing Gist")
+            }
+        }
+    }
+
+    func testFetchGist(){
+
+               DataService.shared.fetchGists { (result) in
+
+                   switch result {
+                       case .success(let gists):
+                           print(dump(gists))
+                       case .failure(let error):
+                           print(error.localizedDescription)
+                   }
+               }
+
+               let testGist = Gist(id: nil, isPublic: true, description: "Hello test", files: ["test.txt": File(content: "testing")])
+
+               print("*******************************")
+               do {
+                   let gistData = try JSONEncoder().encode(testGist)
+                   let stringData = String(data: gistData, encoding: .utf8)
+                   print(stringData as Any)
+               } catch  {
+                   print(error.localizedDescription)
+               }
+
+    }
+}

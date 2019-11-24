@@ -90,16 +90,9 @@ class DataService {
         var postRequest = URLRequest(url: composedURL)
         postRequest.httpMethod = "POST"
 
-        let authString =
-//        "luizramospe@hotmail.com:.Lucas2014"
-        "de0f1f28817a1b69589bf184b5ee3305fb662fb7"
-        var authStringBase64 = ""
 
-        if let authData = authString.data(using: .utf8) {
-            authStringBase64 = authData.base64EncodedString()
-        }
 
-        postRequest.setValue("token \(authString)", forHTTPHeaderField: "Authorization")
+        postRequest.setValue("token \(createAuthCredential())", forHTTPHeaderField: "Authorization")
         postRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         postRequest.setValue("application/json", forHTTPHeaderField: "Accept")
 
@@ -136,6 +129,45 @@ class DataService {
             }
 
         }.resume()
+    }
+
+    func starnUnstarGist(id: String, star: Bool, completion: @escaping(Bool) -> Void) {
+        let starComponents = createURLComponents(path: "/gists/\(id)/star")
+        guard let composedURL = starComponents.url else {
+            print("Component composition failed... -\(#file) - \(#function) - \(#line)")
+            return
+        }
+        var starRequest = URLRequest(url: composedURL)
+        starRequest.httpMethod = star == true ? "PUT" : "DELETE"
+        starRequest.setValue("0", forHTTPHeaderField: "Content-Lenght")
+        starRequest.setValue("token \(createAuthCredential())", forHTTPHeaderField: "Authorization")
+        starRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        starRequest.setValue("application/json", forHTTPHeaderField: "Accept")
+
+        URLSession.shared.dataTask(with: starRequest) { (data, response, error) in
+
+            if let httpResponse = response as? HTTPURLResponse {
+                print("Status Code: \(httpResponse.statusCode)")
+                if httpResponse.statusCode == 204 {
+                    completion(true)
+                } else {
+                    completion(false)
+                }
+
+            }
+        }.resume()
+
+    }
+
+    func createAuthCredential() -> String {
+        let authString = "65f1330f0ad79f4c87e592f84bb0f091bd7db730"
+        //In this case we are using the token, so the next lines are commented
+//        var authStringBase64 = ""
+//
+//        if let authData = authString.data(using: .utf8) {
+//            authStringBase64 = authData.base64EncodedString()
+//        }
+        return authString
     }
 
     func createURLComponents(path: String) -> URLComponents{
