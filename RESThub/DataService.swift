@@ -12,7 +12,15 @@ class DataService {
 
     static let shared = DataService()
     fileprivate let baseURLString = "https://api.github.com"
+    let customSession: URLSession  = {
+        let customConfig = URLSessionConfiguration.default
 
+        //To download or upload while the app is suspended is necessary to use backgroundSession
+//        let backgroundSession = URLSessionConfiguration.background(withIdentifier: "backgroundSession")
+        customConfig.networkServiceType = .video
+        customConfig.allowsCellularAccess = true
+        return URLSession(configuration: customConfig)
+    }()
 
     func fetchGists(completion:
         //@escaping(Result<Any, Error>) // way 1 - using JSONSerialization.jsonObject
